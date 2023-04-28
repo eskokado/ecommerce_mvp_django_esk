@@ -31,6 +31,26 @@ class OrderSerializer(serializers.ModelSerializer):
 
         return order
 
+    def update(self, instance, validated_data):
+        items_data = self.context['request'].data.get('items')
+
+        if items_data:
+            for item_data in items_data:
+                if 'id' in item_data:
+                    try:
+                        order_item = instance.orderitem_set.get(id=item_data['id'])
+                        item_serializer = OrderItemSerializer(order_item, data=item_data, partial=True)
+                        if item_serializer.is_valid(raise_exception=True):
+                            item_serializer.save()
+                    except OrderItem.DoesNotExist:
+                        pass
+                else:
+                    item_serializer = OrderItemSerializer(data=item_data, context={'request': self.context['request']})
+                    if item_serializer.is_valid(raise_exception=True):
+                        item_serializer.save(order=instance)
+
+        return super().update(instance, validated_data)
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         items = instance.orderitem_set.all()
