@@ -37,6 +37,27 @@ class CartSerializer(serializers.ModelSerializer):
             )
         return cart
 
+    def update(self, instance, validated_data):
+        items_data = self.context['request'].data.get('items')
+
+        if items_data:
+            for item_data in items_data:
+                if 'id' in item_data:
+                    try:
+                        cart_item = instance.cartitem_set.get(id=item_data['id'])
+                        item_serializer = CartItemSerializer(cart_item, data=item_data, partial=True)
+                        if item_serializer.is_valid(raise_exception=True):
+                            item_serializer.save()
+                    except CartItem.DoesNotExist:
+                        pass
+                else:
+                    # Trata itens novos
+                    item_serializer = CartItemSerializer(data=item_data, context={'request': self.context['request']})
+                    if item_serializer.is_valid(raise_exception=True):
+                        item_serializer.save(cart=instance)
+
+        return super().update(instance, validated_data)
+
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         items = instance.cartitem_set.all()
