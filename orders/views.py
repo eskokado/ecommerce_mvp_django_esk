@@ -13,3 +13,8 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
         if user_id:
             user = User.objects.get(pk=user_id)
             serializer.save(user=user)
+
+
+class OrderRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
