@@ -12,3 +12,13 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = ('id', 'order', 'quantity', 'unit_price', 'product')
 
+    def update(self, instance, validated_data):
+        instance.quantity = validated_data.get('quantity', instance.quantity)
+        instance.unit_price = validated_data.get('unit_price', instance.unit_price)
+
+        if instance.quantity == 0:
+            instance.delete()
+        else:
+            instance.save()
+
+        return instance
