@@ -2,8 +2,6 @@ from rest_framework import generics
 
 from carts.models import Cart
 from carts.serializers import CartSerializer
-from carts_items.models import CartItem
-from carts_items.serializers import CartItemSerializer
 from django.contrib.auth.models import User
 
 
