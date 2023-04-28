@@ -15,3 +15,8 @@ class CartListCreateAPIView(generics.ListCreateAPIView):
         user_id = self.request.data.get('user')
         user = User.objects.get(pk=user_id)
         serializer.save(user=user)
+
+
+class CartRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
