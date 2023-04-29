@@ -4,8 +4,11 @@ from carts.models import Cart
 from carts.serializers import CartSerializer
 from django.contrib.auth.models import User
 
+from users.permissions import IsAuthenticatedAndAdminOrSafeMethodsAndAuthenticated
+
 
 class CartListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedAndAdminOrSafeMethodsAndAuthenticated]
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
 
@@ -16,5 +19,6 @@ class CartListCreateAPIView(generics.ListCreateAPIView):
 
 
 class CartRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticatedAndAdminOrSafeMethodsAndAuthenticated]
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
