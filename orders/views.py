@@ -2,9 +2,11 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from orders.models import Order
 from orders.serializers import OrderSerializer
+from users.permissions import IsAuthenticatedAndAdminOrSafeMethodsAndAuthenticated
 
 
 class OrderListCreateAPIView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticatedAndAdminOrSafeMethodsAndAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
@@ -16,5 +18,6 @@ class OrderListCreateAPIView(generics.ListCreateAPIView):
 
 
 class OrderRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticatedAndAdminOrSafeMethodsAndAuthenticated]
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
